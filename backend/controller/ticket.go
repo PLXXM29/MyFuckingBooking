@@ -2,8 +2,9 @@ package controller
 
 import (
 	//"fmt"
-    "log"
+	"log"
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/tanapon395/sa-67-example/config"
 	"github.com/tanapon395/sa-67-example/entity"
@@ -57,8 +58,6 @@ func GetTicketsById(c *gin.Context) {
     log.Println("Fetched tickets:", tickets) // เพิ่มบรรทัดนี้เพื่อตรวจสอบค่า
     c.JSON(http.StatusOK, tickets)
 }
-
-
 
 // POST /tickets
 func CreateTicket(c *gin.Context) {

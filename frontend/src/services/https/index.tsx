@@ -2,6 +2,7 @@ import { MembersInterface } from "../../interfaces/IMember";
 import { MoviesInterface } from "../../interfaces/IMovie";  
 import { ShowTimesInterface } from "../../interfaces/IShowtime";
 import { TicketInterface } from "../../interfaces/ITicket"; // Import Interface ของ Tickets
+import axios from 'axios';
 
 const apiUrl = "http://localhost:8000/api";
 
@@ -10,7 +11,7 @@ async function GetMembers() {
   const requestOptions = {
     method: "GET",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json", 
     },
   };
 
@@ -330,7 +331,7 @@ async function DeleteShowtimeByID(id: Number | undefined) {
 }
 
 // ฟังก์ชันเพื่อดึงข้อมูล Tickets ตาม ID
-async function GetTicketById(id: Number | undefined) {
+async function GetTicketsById(id: Number | undefined) {
   if (!id || isNaN(Number(id))) {
     console.error("Invalid ID");
     return false;
@@ -361,9 +362,61 @@ async function GetTicketById(id: Number | undefined) {
   return res;
 }
 
+// ฟังก์ชันสำหรับการดึงข้อมูลที่นั่งที่ถูกจอง
+async function GetBookedSeats(showtimeID: number, theaterID: number): Promise<any[]> {
+  try {
+      const response = await fetch(`${apiUrl}/booked-seats/${showtimeID}/${theaterID}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+
+      if (!response.ok) {
+          console.error('Error fetching booked seats:', response.statusText);
+          return [];
+      }
+
+      const bookedSeats = await response.json();
+      return bookedSeats.data || [];
+  } catch (error) {
+      console.error('Error fetching booked seats:', error);
+      return [];
+  }
+}
+
+
+
+
+import { BookingInterface } from "../../interfaces/IBooking";
+
+
+
+// ฟังก์ชันการจองที่นั่ง
+const bookSeats = async (bookingData: BookingInterface) => {
+  try {
+    const response = await axios.post(`${apiUrl}/book-seats`, {
+      member_id: bookingData.MemberID,
+      showtime_id: bookingData.ShowTimeID,
+      seat_id: bookingData.SeatID,  // ต้องเป็น array ของเลขที่นั่ง
+      status: bookingData.Status,   // สถานะของการจอง
+    });
+
+    if (response.status === 200) {
+      return { success: true, message: 'Booking created successfully' };
+    } else {
+      return { success: false, message: 'Failed to create booking' };
+    }
+  } catch (error) {
+    console.error('Error booking seats:', error);
+    return { success: false, message: 'An error occurred while booking seats' };
+  }
+};
+
 
 export {
-  GetTicketById,
+  GetBookedSeats,
+  GetTicketsById,
   GetMembers,
   CreateMember,
   GetGenders,
@@ -380,5 +433,5 @@ export {
   CreateShowtime,     
   UpdateShowtime,     
   DeleteShowtimeByID,
-
+  bookSeats,
 };

@@ -3,7 +3,7 @@ import { Table, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import './myticket.css';
 import Navbar from '../../components/navbar/navbar';
-import { GetTicketById } from '../../services/https/index';
+import { GetTicketsById } from '../../services/https/index';
 
 const MyTicket: React.FC = () => {
   const [tickets, setTickets] = useState<any[]>([]);
@@ -23,7 +23,7 @@ const MyTicket: React.FC = () => {
   
     const fetchTickets = async () => {
       try {
-        const data = await GetTicketById(Number(memberID));  // ใช้ GetTicketById
+        const data = await GetTicketsById(Number(memberID));  // ใช้ GetTicketById
         console.log("Tickets data:", data);
         if (data && Array.isArray(data)) {
           setTickets(data);

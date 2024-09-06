@@ -1,4 +1,3 @@
-
 package entity
 
 import "gorm.io/gorm"
@@ -8,6 +7,5 @@ type Theater struct {
 	TheaterName string
 
 	//onetomany
-    Seat []Seat `gorm:"foreignKey:TheaterID"`
-
+	Seat []Seat `gorm:"foreignKey:TheaterID"`
 }

@@ -7,32 +7,31 @@ import Analytics from './pages/Analytics/Analytics';
 import Login from './pages/Login/login';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Home from './pages/Home/home';
-import MyTicket from './pages/MyTicket/myticket'; // เพิ่มการอิมพอร์ต MyTicket
+import MyTicket from './pages/MyTicket/myticket';
+import SeatBooking from './pages/SeatBooking/SeatBooking'; // เพิ่มการอิมพอร์ต SeatBooking
 
 const App: React.FC = () => {
     const navigate = useNavigate();
-    const location = useLocation();  // ใช้ useLocation เพื่อตรวจสอบเส้นทางปัจจุบัน
+    const location = useLocation();
     const isLoggedIn = localStorage.getItem('isLogin') === 'true';
     const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
     useEffect(() => {
         if (isLoggedIn) {
-            // ถ้าเป็น Admin และไม่อยู่ในเส้นทาง Admin ให้ไปที่ Dashboard
             if (isAdmin && !['/dashboard', '/showtimes', '/members', '/analytics'].includes(location.pathname)) {
                 navigate('/dashboard');
             }
-            // ถ้าไม่ใช่ Admin และไม่อยู่ในเส้นทาง Home หรือ MyTicket ให้ไปที่ Home
-            if (!isAdmin && !['/home', '/myticket'].includes(location.pathname)) {
+            if (!isAdmin && !['/home', '/myticket', '/seatbooking'].includes(location.pathname)) { // เพิ่ม '/seatbooking' ในการตรวจสอบ
                 navigate('/home');
             }
         } else {
-            navigate('/login'); // ถ้าไม่ได้ล็อกอินให้นำทางไปที่หน้า Login
+            navigate('/login');
         }
     }, [isLoggedIn, isAdmin, navigate, location.pathname]);
 
     return (
         <div className="app">
-            {isLoggedIn && isAdmin && <Sidebar />}  {/* แสดง Sidebar เฉพาะเมื่อผู้ใช้ล็อกอินแล้วและเป็น Admin */}
+            {isLoggedIn && isAdmin && <Sidebar />}
             <div className="main-content">
                 <Routes>
                     <Route path="/" element={<Navigate to={isLoggedIn ? (isAdmin ? "/dashboard" : "/home") : "/login"} />} />
@@ -46,7 +45,8 @@ const App: React.FC = () => {
 
                     {/* เส้นทางสำหรับผู้ใช้ที่ไม่ใช่ Admin */}
                     <Route path="/home" element={isLoggedIn && !isAdmin ? <Home /> : <Navigate to="/login" />} />
-                    <Route path="/myticket" element={isLoggedIn && !isAdmin ? <MyTicket /> : <Navigate to="/login" />} /> {/* เพิ่มเส้นทางสำหรับ MyTicket */}
+                    <Route path="/myticket" element={isLoggedIn && !isAdmin ? <MyTicket /> : <Navigate to="/login" />} />
+                    <Route path="/seatbooking" element={isLoggedIn && !isAdmin ? <SeatBooking /> : <Navigate to="/login" />} />
 
                     <Route path="*" element={<Navigate to="/login" />} />
                 </Routes>

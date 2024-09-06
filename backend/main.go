@@ -25,6 +25,10 @@ func main() {
 	// เปลี่ยนเส้นทางของกลุ่ม route ให้มี prefix เป็น /api
 	router := r.Group("api")
 	{
+
+		//Booking Routes
+		router.POST("/book-seats", controller.CreateBooking)
+
 		// Member Routes
 		router.GET("/members", controller.ListMembers)
 		router.GET("/member/:id", controller.GetMember)
@@ -56,6 +60,7 @@ func main() {
 		router.POST("/seats", controller.CreateSeat)
 		router.PATCH("/seats/:id", controller.UpdateSeat)
 		router.DELETE("/seats/:id", controller.DeleteSeat)
+		router.GET("/booked-seats/:showtimeID/:theaterID", controller.GetBookedSeats)
 
 		// Ticket Routes
 		router.GET("/tickets", controller.ListTickets)

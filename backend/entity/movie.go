@@ -8,14 +8,14 @@ import (
 
 type Movie struct {
 	gorm.Model
-	MovieName   string
-	MovieType   string
-	MovieDuration	int
-	Director    string
-	Actor       string
-	Synopsis    string
-	ReleaseDate time.Time
+	MovieName     string
+	MovieType     string
+	MovieDuration int
+	Director      string
+	Actor         string
+	Synopsis      string
+	ReleaseDate   time.Time
 
-	//onetomany   
+	//onetomany
 	ShowTimes []ShowTimes `gorm:"foreignKey:MovieID"`
 }

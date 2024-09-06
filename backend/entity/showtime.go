@@ -1,22 +1,21 @@
 package entity
 
 import (
-   "time"
-   "gorm.io/gorm"
+	"time"
+	"gorm.io/gorm"
 )
 
 type ShowTimes struct {
-   gorm.Model
+	gorm.Model
+	Showdate time.Time 
 
-   Showdate  time.Time 
+	//FK
+	MovieID   *uint
+	Movie     Movie `gorm:"foreignKey:MovieID"`
 
-   //FK
-   MovieID *uint
-   Movie   Movie `gorm:"foreignKey:MovieID"`
+	TheaterID *uint
+	Theater   Theater `gorm:"foreignKey:TheaterID"`
 
-   TheaterID *uint
-   Theater  Theater `gorm:"foreignKey:TheaterID"`
-
-   //onetomany
-   Tickets []Ticket `gorm:"foreignKey:ShowTimeID"`
+	//onetomany
+	Tickets []Ticket `gorm:"foreignKey:ShowTimeID"`
 }
